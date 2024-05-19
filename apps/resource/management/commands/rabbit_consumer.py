@@ -18,16 +18,8 @@ ABI = load_abi()
 
 
 
-def get_pool_onchain(web3: Web3, pool_ad: str, version="v3pool"):
-    contract = web3.eth.contract(pool_ad, abi=ABI[version])
-    token0 = str(contract.functions.token0().call())
-    token1 = str(contract.functions.token1().call())
-
-    return token0, token1
-
-
 def get_erc20_onchain(web3: Web3, address: str):
-    contract = web3.eth.contract(address, abi=ABI["erc20"])
+    contract = web3.eth.contract(address, abi=ABI["Erc20"])
     name = contract.functions.name().call()
     symbol = str(contract.functions.symbol().call())
     decimals = int(contract.functions.decimals().call())
