@@ -1,9 +1,11 @@
-from web3 import Web3, types
+from web3 import Web3
+from web3.types import LogReceipt, TxReceipt
+from hexbytes import HexBytes
+from typing import Any
 from django.conf import settings
 import json
 import os
 
-__all__ = ["load_abi", "load_abi_events", "cal_market_cap"]
 
 print(os.listdir())
 
@@ -52,4 +54,35 @@ def cal_market_cap(chain, w3=None):
     return round_data[1] / 10 ** aggregator.functions.decimals().call()
 
 
-    
+def create_log_entry(data: dict[str, Any]):
+    return LogReceipt({
+        'address': Web3.to_checksum_address(data['address']),
+        'blockHash': HexBytes(data['blockHash']),
+        'blockNumber': int(data['blockNumber'], 16),
+        'data': HexBytes(data['data']),
+        'logIndex': int(data['logIndex'], 16),
+        'topics': [HexBytes(topic) for topic in data['topics']],
+        'transactionHash': HexBytes(data['transactionHash']),
+        'transactionIndex': int(data['transactionIndex'], 16),
+        'removed': bool(data['removed'])
+    })
+
+
+def create_transaction_receipt(data: dict[str, Any]):
+    return TxReceipt({
+        'transactionHash': HexBytes(data['transactionHash']),
+        'transactionIndex': int(data['transactionIndex'], 16),
+        'blockHash': HexBytes(data['blockHash']),
+        'blockNumber': int(data['blockNumber'], 16),
+        'contractAddress': Web3.to_checksum_address(data['contractAddress']) if data.get('contractAddress') else None,
+        'cumulativeGasUsed': int(data['cumulativeGasUsed'], 16),
+        'effectiveGasPrice': int(data['effectiveGasPrice'], 16),
+        'gasUsed': int(data['gasUsed'], 16),
+        'from': Web3.to_checksum_address(data['from']),
+        'to': Web3.to_checksum_address(data['to']) if data.get('to') else None,
+        'logs': [create_log_entry(log) for log in data['logs']],
+        'logsBloom': HexBytes(data['logsBloom']),
+        'status': int(data['status'], 16),
+        'root': HexBytes(data['root']) if data.get('root') else None,
+        'type': int(data['type'], 16)
+    })

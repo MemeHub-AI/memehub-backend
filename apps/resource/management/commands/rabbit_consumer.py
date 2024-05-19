@@ -57,34 +57,6 @@ def get_erc20_token(web3: Web3, address: str, chain_id: int):
 def get_tokens(log):
     web3 = Web3(Web3.HTTPProvider(ChainList[log["chain"]]["rpc"]))
     match log["version"]:
-        case "iziswappool":
-            if log["sellXEarnY"] is False:
-                log["amountX"], log["amountY"] = log["amountY"], log["amountX"]
-                log["tokenX"], log["tokenY"] = log["tokenY"], log["tokenX"]
-
-            token0, token1 = log.get("tokenX"),log.get("tokenY")
-            amount0, amount1 = log.get("amountX"), log.get("amountY")
-
-        case "v2pool":
-            pool_ad = WEB3.to_checksum_address(log["address"])
-            token0, token1 = get_pool_onchain(web3, pool_ad, log["version"])
-
-            if Decimal(log.get("amount0In")) == 0:
-                amount0, amount1 = log["amount0Out"], log["amount1In"]
-            else:
-                amount0, amount1 = log["amount1Out"], log["amount0In"]
-                token0, token1 = token1, token0
-
-        case "v3pool":
-
-            pool_ad = WEB3.to_checksum_address(log["address"])
-            token0, token1 = get_pool_onchain(web3, pool_ad, log["version"])
-            if Decimal(log.get("amount0")) < 0:
-                log["amount0"], log["amount1"] = log["amount1"], log["amount0"]
-                token0, token1 = token1, token0
-
-            amount0, amount1 = log.get("amount0"), log.get("amount1")
-
         case "memehubtoken":
             match log["type"]:
                 case "ContinuousMint":
