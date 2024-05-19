@@ -1,3 +1,4 @@
+import json
 from apps.coin import models as coin_models
 from rest_framework import serializers
 from django.utils import timezone
@@ -93,6 +94,10 @@ class UserFollowersSerializer(serializers.ModelSerializer):
 
 
 class NewsArticleSerializer(serializers.ModelSerializer):
+    articles = serializers.SerializerMethodField()
     class Meta:
         model = models.NewsArticle
         fields = ['title', 'image', 'articles', 'create_time']
+
+    def get_articles(self, obj):
+        return json.loads(obj.articles)

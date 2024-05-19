@@ -4,6 +4,7 @@ from apps.coin.models import Coin
 from web3 import Web3
 from extension import str_to_json, json_to_str, cal_market_cap
 from memehub.settings import CHAINLIST as ChainList
+import logging
 import time
 
 
@@ -38,9 +39,10 @@ class Command(BaseCommand):
                             }
                         )
                 except Exception as e:
+                    logging.error(e)
                     pass
 
-            if not good_dict:
+            if good_dict:
 
                 for key in good_dict.keys():
                     Coin.objects.filter(id__in=good_dict[key]["id_list"]).update(
