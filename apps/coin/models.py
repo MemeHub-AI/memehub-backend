@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 from apps.user import models as user_models
 
 # Create your models here.
@@ -25,14 +25,9 @@ class Coin(models.Model):
 
     create_time = models.DateTimeField(auto_now_add=True)
 
-    __CHAIN__ = {
-        1: 'eth',
-        534352: 'scroll',
-    }
-
     @property
     def chain(self):
-        return self.__CHAIN__.get(self.chain_id, 'eth')
+        return settings.CHAINID_MAPPING.get(self.chain_id, 'eth')
 
     class Meta:
         db_table = 'coin'

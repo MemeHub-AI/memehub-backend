@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from .settings_utils import get_database_config_from_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,6 +26,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", '1234567890')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ENVIRONMENT").lower() == 'dev'
+ENVIRONMENT = os.getenv("ENVIRONMENT").lower()
 
 ALLOWED_HOSTS = ["*"]
 
@@ -81,22 +83,9 @@ ASGI_APPLICATION = 'memehub.asgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "resource": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("RESOURCE_DB_NAME"),
-        "USER": os.getenv("RESOURCE_DB_USER"),
-        "PASSWORD": os.getenv("RESOURCE_DB_PASSWORD"),
-        "HOST": os.getenv("RESOURCE_DB_HOST"),
-        "PORT": os.getenv("RESOURCE_DB_PORT", "3306"),
-    },
-    'default': {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("MASTER_DB_NAME"),
-        "USER": os.getenv("MASTER_DB_USER"),
-        "PASSWORD": os.getenv("MASTER_DB_PASSWORD"),
-        "HOST": os.getenv("MASTER_DB_HOST"),
-        "PORT": os.getenv("MASTER_DB_PORT", "3306"),
-    }
+    "remote": get_database_config_from_url(os.getenv("REMOTE_DATABASE_URL")),
+    "resource": get_database_config_from_url(os.getenv("RESOURCE_DATABASE_URL")),
+    'default': get_database_config_from_url(os.getenv("DATABASE_URL")),
 }
 
 DATABASE_ROUTERS = ['memehub.database_router.DatabaseAppsRouter']
@@ -167,9 +156,252 @@ RABBIT_PORT = os.getenv("RABBIT_PORT")
 # chain data
 
 CHAINLIST = {
-    "eth": {"id": "1", "name": "ethereum", "rpc": "https://ethereum-rpc.publicnode.com"},
-    "scroll": {"id": "534352", "name": "scroll", "rpc": "https://rpc.ankr.com/scroll"},
+    "eth": {
+        "id": "1",
+        "name": "ethereum",
+        "rpc": "https://eth.llamarpc.com",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": True,
+    },
+    "optimism": {
+        "id": "10",
+        "name": "optimism",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "bsc": {
+        "id": "56",
+        "name": "bsc",
+        "rpc": "https://bsc-dataseed.bnbchain.org",
+        "aggregator": "0xd381892392FD0AFa151e02d1D1883c0E4C5269F8",
+        "contract_address": "",
+        "native":{
+            "decimals":18,
+            "name":"BNB",
+            "symbol":"BNB"
+        },
+        "explorer":"https://bscscan.com",
+        "explorer_tx":"https://bscscan.com/tx",
+        "is_supported": True,
+    },
+    "ftm": {
+        "id": "250",
+        "name": "fantom",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "zksync": {
+        "id": "324",
+        "name": "zksync",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "arbitrum": {
+        "id": "42161",
+        "name": "arbitrum",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "linea": {
+        "id": "59144",
+        "name": "linea",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "base": {
+        "id": "8453",
+        "name": "base",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "blast": {
+        "id": "81457",
+        "name": "blast",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "merlin-chain": {
+        "id": "4200",
+        "name": "merlin",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "bevm": {
+        "id": "11501",
+        "name": "bevm",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":0,
+            "name":"",
+            "symbol":""
+        },
+        "explorer":"",
+        "explorer_tx":"",
+        "is_supported": False,
+    },
+    "scroll": {
+        "id": "534352",
+        "name": "scroll",
+        "rpc": "https://scroll-mainnet.rpc.grove.city/v1/a7a7c8e2",
+        "aggregator": "0x33112b4EdD06FAa06e041c65CEd5b7e07330f025",
+        "contract_address": "0x35Ce38AC48Dd3c7Bf6bd14dE8e81128d76E11885",
+        "native":{
+            "decimals":18,
+            "name":"Ether",
+            "symbol":"ETH"
+        },
+        "explorer":"https://scrollscan.com/",
+        "explorer_tx":"https://scrollscan.com/tx",
+        "is_supported": True,
+    },
+    "opbnb":{
+        "id": "204",
+        "name": "opbnb",
+        "rpc": "https://opbnb-mainnet.nodereal.io/v1/ef196d9fb8d246aba50c5ccdd82f98fe",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":18,
+            "name":"BNB",
+            "symbol":"BNB"
+        },
+        "explorer":"https://mainnet.opbnbscan.com/",
+        "explorer_tx":"https://mainnet.opbnbscan.com/tx",
+        "is_supported": True,
+    },
+    "bsc_testnet": {
+        "id": "97",
+        "name": "bsc_testnet",
+        "rpc": "https://data-seed-prebsc-1-s2.bnbchain.org:8545",
+        "aggregator": "0xd381892392FD0AFa151e02d1D1883c0E4C5269F8",
+        "contract_address": "",
+        "native":{
+            "decimals":18,
+            "name":"BNB",
+            "symbol":"tBNB"
+        },
+        "explorer":"https://testnet.bscscan.com",
+        "explorer_tx":"https://testnet.bscscan.com/tx",
+        "is_supported": False,
+    },
+    "opbnb_testnet":{
+        "id": "5611",
+        "name": "opbnb_testnet",
+        "rpc": "https://opbnb-testnet-rpc.bnbchain.org",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":18,
+            "name":"tBNB",
+            "symbol":"tBNB"
+        },
+        "explorer":"https://testnet.opbnbscan.com/",
+        "explorer_tx":"https://testnet.opbnbscan.com/tx",
+        "is_supported": False,
+    },
+    "scroll_testnet":{
+        "id": "534351",
+        "name": "scroll_testnet",
+        "rpc": "",
+        "aggregator": "",
+        "contract_address": "",
+        "native":{
+            "decimals":18,
+            "name":"Ether",
+            "symbol":"ETH"
+        },
+        "explorer":"https://testnet.opbnbscan.com/",
+        "explorer_tx":"https://testnet.opbnbscan.com/tx",
+        "is_supported": False,
+    }
 }
+
+if ENVIRONMENT.lower() == "prod":
+    CHAINLIST = {k: v for k, v in CHAINLIST.items() if "testnet" not in k}
+
+CHAINID_MAPPING = {int(chain["id"]): chain["name"] for chain in CHAINLIST.values()}
 
 SCANNER_URL = {
     "eth": "https://etherscan.io",
