@@ -25,8 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", '1234567890')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("ENVIRONMENT").lower() == 'dev'
-ENVIRONMENT = os.getenv("ENVIRONMENT").lower()
+ENVIRONMENT = os.getenv("ENVIRONMENT", "dev").lower()
+DEBUG = ENVIRONMENT == 'dev'
 
 ALLOWED_HOSTS = ["*"]
 
@@ -83,9 +83,9 @@ ASGI_APPLICATION = 'memehub.asgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "remote": get_database_config_from_url(os.getenv("REMOTE_DATABASE_URL")),
-    "resource": get_database_config_from_url(os.getenv("RESOURCE_DATABASE_URL")),
-    'default': get_database_config_from_url(os.getenv("DATABASE_URL")),
+    "remote": get_database_config_from_url(os.getenv("REMOTE_DATABASE_URL", "sqlite://./sqlite3.db")),
+    "resource": get_database_config_from_url(os.getenv("RESOURCE_DATABASE_URL", "sqlite://./sqlite3.db")),
+    'default': get_database_config_from_url(os.getenv("DATABASE_URL", "sqlite://./sqlite3.db")),
 }
 
 DATABASE_ROUTERS = ['memehub.database_router.DatabaseAppsRouter']
@@ -403,10 +403,7 @@ if ENVIRONMENT.lower() == "prod":
 
 CHAINID_MAPPING = {int(chain["id"]): chain["name"] for chain in CHAINLIST.values()}
 
-SCANNER_URL = {
-    "eth": "https://etherscan.io",
-    "scroll": "https://scrollscan.com",
-}
+S3_BASE_URL = "https://storage.memehub.ai"
 
 
 # cache config
