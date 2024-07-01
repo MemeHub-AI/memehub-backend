@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'apps.real_data',
     'apps.user',
     'apps.coin',
+    'apps.airdrop',
+    'apps.community',
 ]
 
 MIDDLEWARE = [
